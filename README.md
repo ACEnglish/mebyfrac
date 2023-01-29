@@ -66,3 +66,5 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 | 18    | CCC | -       | GGG  | -    |
 | 19    | GCC | GCC     | CGG  | CCG  |
 | 20    | GCG | -       | CGC  | -    |
+
+sum(F(g)) + sum(F(rg)) ==  0.5

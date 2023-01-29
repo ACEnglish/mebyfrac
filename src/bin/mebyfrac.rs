@@ -1,7 +1,5 @@
 use std::env;
 use bio::io::fasta;
-// use ndarray::Array; not used for now
-// use std::convert::TryFrom; not used for now
 use std::collections::HashMap;
 
 fn reverse(w: &String) -> String {
@@ -93,13 +91,22 @@ fn main() {
     let k_usize = k_float as usize;
     let file_path = &args[2];
     
-    let _n = 4_f64.powf(k_float); // ,used for the final sum array
-    //let mb = make_pow_array(4, k_float) ; equivalent to mb = 4 ** np.arange(k-1, -1, -1)
+    // probably const?
     let letters = vec!['A', 'T', 'C', 'G'];
+    let comp_letters = vec!['T', 'A', 'G', 'C'];
+
+    let n = 4_u32.pow(k_usize as u32); // total number of kmers
+    let kfeat = vec![0; n as usize]; // counts of each kmer
+    // Turn kmer into the index.. this will need to be a method
+    //let mb = make_pow_array(4, k_float) ; equivalent to mb = 4 ** np.arange(k-1, -1, -1)
+    // digits = np.array([m_letters.index(_) for _ in kmer])
+    // index = digits * mb
+    // kfeat[index] += 1
     //let digits = Array::usize?::zeros(k);
 
     // what is digits' size.. its k
     let kmers = generate_kmers(k_usize, &letters, "".to_string());
+    // using the kmer indexing, how can I quickly find the generator kmer?
     let n_partition = create_generator_kmers(kmers);
     dbg!("generators: {:?}", &n_partition);
 
@@ -150,12 +157,14 @@ fn main() {
                         None => &0.0
         };
         g_count += tot;
+        println!("x\tg\t{}\t{}", g, tot);
 
         let tot = match table.get(&compliment(g)) {
                         Some(v) => v,
                         None => &0.0
                     };
         cg_count += tot;
+        println!("x\tcg\t{}\t{}", g, tot);
 
 
         let r = reverse(g);
@@ -166,12 +175,14 @@ fn main() {
                             None => &0.0
             };
             rg_count += tot;
+            println!("x\trg\t{}\t{}", g, tot);
 
             let tot = match table.get(&compliment(&r)) {
                             Some(v) => v,
                             None => &0.0
                         };
             rcg_count += tot;
+            println!("x\tcrg\t{}\t{}", g, tot);
         }
     }
     let eq6 = (g_count + rg_count) / tot_kmers;
