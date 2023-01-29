@@ -1,7 +1,7 @@
 use std::env;
 use bio::io::fasta;
-use ndarray::Array2;
-use std::convert::TryFrom;
+// use ndarray::Array; not used for now
+// use std::convert::TryFrom; not used for now
 use std::collections::HashMap;
 
 fn reverse(w: &String) -> String {
@@ -46,39 +46,6 @@ fn generate_kmers(k: usize, bases: &[char], current: String) -> Vec<String> {
     kmers
 }
 
-fn partition_kmers(kmers: &Vec<String>) -> HashMap<String, Vec<String>>{
-    /* 
-     * Generates the partitions of a set of vectors
-     * Returns a hash map of a (random) key which represents the partition
-     * and value of all kmers in the partition
-     */
-    let mut table: HashMap<String, Vec<String>> = HashMap::new();
-    for val in kmers {
-        // is the reverse in the table? add it
-        let r = reverse(&val);
-        if table.contains_key(&r) {
-            println!("partition on r {}", val);
-            table.get_mut(&r).map(|v| v.push(val.clone()));
-            continue;       
-        }
-        let c = compliment(&val);
-        if table.contains_key(&c) {
-            println!("partition on c {}", val);
-            table.get_mut(&c).map(|v| v.push(val.clone()));
-            continue
-        }
-        let rc = compliment(&r);
-        if table.contains_key(&rc) {
-            println!("partition on rc {}", val);
-            table.get_mut(&rc).map(|v| v.push(val.clone()));
-            continue
-        }
-        println!("new partition {}", val);
-        table.entry(val.clone()).or_insert(Vec::new()).push(val.clone());
-    }
-    return table;
-}
-
 fn same_set(k1:&String, k2:&String) -> usize {
     /*
      * Returns the math_table column index+1 for k2 relative to k1
@@ -118,27 +85,21 @@ fn create_generator_kmers(kmers: Vec<String>) -> Vec<String>{
     return g_kmers;
 }
 
-fn math_table_rows(k: usize) -> usize {
-    /* 
-     * Calculate the number of rows a math table will hold
-     */
-    let n_k:u32 = u32::try_from(k).unwrap();
-    let val:u32 = 2_u32.pow(n_k-1) + 4_u32.pow(n_k-1);
-    return usize::try_from(val).unwrap();
-}
-
-// This is the main function
 fn main() {
     // Arg parsing
     let args: Vec<String> = env::args().collect();
     dbg!(&args);
-    let k = args[1].parse::<usize>().unwrap();
+    let k_float = args[1].parse::<f64>().unwrap();
+    let k_usize = k_float as usize;
     let file_path = &args[2];
+    
+    let _n = 4_f64.powf(k_float); // ,used for the final sum array
+    //let mb = make_pow_array(4, k_float) ; equivalent to mb = 4 ** np.arange(k-1, -1, -1)
+    let letters = vec!['A', 'T', 'C', 'G'];
+    //let digits = Array::usize?::zeros(k);
 
-    // Can replace with Array2 once I copy kmer.py
-    dbg!("finding partitions for", &k);
-    let bases = vec!['A', 'T', 'C', 'G'];
-    let kmers = generate_kmers(k, &bases, "".to_string());
+    // what is digits' size.. its k
+    let kmers = generate_kmers(k_usize, &letters, "".to_string());
     let n_partition = create_generator_kmers(kmers);
     dbg!("generators: {:?}", &n_partition);
 
@@ -160,12 +121,12 @@ fn main() {
     while let Some(Ok(record)) = records.next() {
         // For multiple kmer values, subtract the smallest k
         // And sub loop the let s = block?
-        let m_len = (record.seq().len() - k) as f64;
+        let m_len = (record.seq().len() - k_usize) as f64;
 
         tot_kmers += m_len;
         let mut pos = 0;
         while pos < m_len as usize {
-            let s = match String::from_utf8(record.seq()[pos..pos + k].to_vec()) {
+            let s = match String::from_utf8(record.seq()[pos..pos + k_usize].to_vec()) {
                 Ok(v) => v,
                 Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
             };

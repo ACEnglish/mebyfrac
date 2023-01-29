@@ -19,6 +19,7 @@ def do(kmer, m_letters):
     mb = 4 ** np.arange(k-1, -1, -1)
     digits = np.array([m_letters.index(_) for _ in kmer])
     numbering = (digits * mb).sum()
+    print(numbering)
     kfeat = np.zeros(n)
     
     kfeat[numbering] += 1
