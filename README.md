@@ -11,11 +11,6 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 
 ### Code
 - HashMap is slow. Copy the array counting from kmer.py.
-- Finding the generating set is slow... But once I get kmer.py, can I use that to figure out the generating set? Maybe..
-  Then its just 'figure out number of rows' and be able to map row# to col#.... Wait, if I can figure out g to e.g.
-  C(g), then I don't need the reverse/compliment operators to build strings. Then its just math/indexing to fill out the
-  table...
-- Improve documentation:
 - how to build (`cargo build`)
 - probably will need to make a per-os release 
 - Figure out crosscomp
@@ -27,20 +22,6 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 - Better argparsing (e.g. a -h)
 - Better output
 - Single parsing for multiple kmers
-- Better logging. I don't like `dbg!`
-- const comp lookup with `phf = { version = "0.11", default-features = false }`?
-
-### Science
-- Run on as many kmers and assemblies as possible
- - Based on the 'quality' of the assembly, we should see stronger deviations from 0.5
- - Need a number of 'bad' assemblies for comparison. What 'bad' means is unknown
-- Test on raw sequencing data
- - If we assume even, complete coverage, running on sequencing should produce the same results as running on a complete
-   assembly
- - Find a 'perfect' assembly and compare its eq6/7 to the sequencing data's eq6/7
- - Next, titrate the sequencing experiment and examine if the coverage is dependent on the eq6/7 such that e.g. 30x ->
-   eq6/7 == 0.5, 5x -> eq6/7 != 0.5
-- If all of that works out, turn this into a confirmatory results paper plus new tool
 
 ## Table 1: Math Table for k=3. The Generating set is the first column. 
 
@@ -68,3 +49,9 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 | 20    | GCG | -       | CGC  | -    |
 
 sum(F(g)) + sum(F(rg)) ==  0.5
+
+## Some numbers
+
+
+data/R_sphaeroides.fa
+GC% - 0.6878748050210077
