@@ -1,0 +1,19 @@
+[package]
+name = "mebyfrak" # the name of the package
+version = "0.1.0"    # the current version, obeying semver
+authors = ["Adam English <ACEnglish@gmail.com>"]
+edition = "2018"
+
+
+[dependencies]
+bio = "1.1.0"
+dahl-bellnumber = "*"
+ndarray = "*"
+
+[[bin]]
+name = "mebyfrac"
+
+[target.x86_64-apple-darwin]
+linker = "x86_64-apple-darwin14-clang"
+ar = "x86_64-apple-darwin14-ar"
+
