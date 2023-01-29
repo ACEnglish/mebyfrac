@@ -27,11 +27,14 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 
 ### Science
 - Run on as many kmers and assemblies as possible
-- Find 'bad' assemblies and run on them
- - Will need to quantify what 'bad' means
+ - Based on the 'quality' of the assembly, we should see stronger deviations from 0.5
+ - Need a number of 'bad' assemblies for comparison. What 'bad' means is unknown
 - Test on raw sequencing data
- - If we assume even, complete coverage, the frequencies will (should) wash out.
- - If we titrate the sequencing experiment, there should be a coverage where the eq6/7 deviates more strongly from 0.5
+ - If we assume even, complete coverage, running on sequencing should produce the same results as running on a complete
+   assembly
+ - Find a 'perfect' assembly and compare its eq6/7 to the sequencing data's eq6/7
+ - Next, titrate the sequencing experiment and examine if the coverage is dependent on the eq6/7 such that e.g. 30x ->
+   eq6/7 == 0.5, 5x -> eq6/7 != 0.5
 - If all of that works out, turn this into a confirmatory results paper plus new tool
 
 ## Table 1: Math Table for k=3. The Generating set is the first column. 
