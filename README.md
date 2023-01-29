@@ -11,7 +11,11 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 
 ### Code
 - HashMap is slow. Copy the array counting from kmer.py.
-- Fill out documentation:
+- Finding the generating set is slow... But once I get kmer.py, can I use that to figure out the generating set? Maybe..
+  Then its just 'figure out number of rows' and be able to map row# to col#.... Wait, if I can figure out g to e.g.
+  C(g), then I don't need the reverse/compliment operators to build strings. Then its just math/indexing to fill out the
+  table...
+- Improve documentation:
 - how to build (`cargo build`)
 - probably will need to make a per-os release 
 - Figure out crosscomp
@@ -24,6 +28,7 @@ run `mebyfrac <k> <fasta>` where `k` is the kmer size and `fasta` is a fasta fil
 - Better output
 - Single parsing for multiple kmers
 - Better logging. I don't like `dbg!`
+- const comp lookup with `phf = { version = "0.11", default-features = false }`?
 
 ### Science
 - Run on as many kmers and assemblies as possible

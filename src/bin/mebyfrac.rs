@@ -1,10 +1,8 @@
-use std::io;
 use std::env;
 use bio::io::fasta;
-use std::collections::HashMap;
-use dahl_bellnumber::bell;
 use ndarray::Array2;
 use std::convert::TryFrom;
+use std::collections::HashMap;
 
 fn reverse(w: &String) -> String {
     /* 
@@ -131,14 +129,14 @@ fn math_table_rows(k: usize) -> usize {
 
 // This is the main function
 fn main() {
+    // Arg parsing
     let args: Vec<String> = env::args().collect();
     dbg!(&args);
-
     let k = args[1].parse::<usize>().unwrap();
     let file_path = &args[2];
 
+    // Can replace with Array2 once I copy kmer.py
     dbg!("finding partitions for", &k);
-
     let bases = vec!['A', 'T', 'C', 'G'];
     let kmers = generate_kmers(k, &bases, "".to_string());
     let n_partition = create_generator_kmers(kmers);
@@ -157,10 +155,11 @@ fn main() {
 
     dbg!("Reading Fasta");
     let mut records = fasta::Reader::from_file(file_path).expect("Unable to open").records();
-    //let mut records = fasta::Reader::new(reader).records();
     let mut tot_kmers:f64 = 0.0;
 
     while let Some(Ok(record)) = records.next() {
+        // For multiple kmer values, subtract the smallest k
+        // And sub loop the let s = block?
         let m_len = (record.seq().len() - k) as f64;
 
         tot_kmers += m_len;
@@ -217,6 +216,7 @@ fn main() {
     let eq6 = (g_count + rg_count) / tot_kmers;
     let eq7 = (cg_count + rcg_count) / tot_kmers;
 
+    // Should report this as a json, or at least give a header to the tsv
     println!("tot\t{}",  tot_kmers);
     println!("g\t{}",  g_count);
     println!("rg\t{}",  rg_count);
